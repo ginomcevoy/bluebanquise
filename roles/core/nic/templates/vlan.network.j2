@@ -1,0 +1,23 @@
+#jinja2: lstrip_blocks: True
+#### BlueBanquise file ####
+## {{ansible_managed}}
+
+{% import 'j2_macros.j2' as j2 with context %}
+
+[Match]
+Name={{ vlandev_item }}
+
+[Network]
+{% for vlan_interface in vlan_interfaces %}
+VLAN={{ vlan_interface.conn_name | default(vlan_interface.interface) | string }}
+{% endfor %}
+{% set unique_nic_dns4 = [] %}
+{% for vlan_interface in vlan_interfaces %}
+  {% if j2.nic_dns4(vlan_interface) | length > 0 %}
+    {% set vlan_nic_dns4 = j2.nic_dns4(vlan_interface) | trim %}
+    {% if vlan_nic_dns4 not in unique_nic_dns4 %}
+DNS={{ vlan_nic_dns4 }}
+      {{ unique_nic_dns4.append(vlan_nic_dns4) }}
+    {% endif %}
+  {% endif %}
+{% endfor %}

@@ -1,0 +1,19 @@
+---
+
+- name: Organize VLAN interfaces by their VLAN device
+  set_fact:
+    vlan_mappings: "{{ vlan_mappings | default([]) + [{'vlandev': item.vlandev, 'vlan_interface': item}] }}"
+  loop: "{{ network_interfaces }}"
+  when: item.type is defined and item.type == "vlan"
+
+- name: Identify all VLAN devices
+  set_fact:
+    vlan_devices: "{{ vlan_mappings | map(attribute='vlandev') | list | unique }}"
+
+- name: include_tasks ░ Use dedicated task for VLAN device
+  ansible.builtin.include_tasks: vlan_network.yml
+  vars:
+    vlan_interfaces: "{{ vlan_mappings | selectattr('vlandev', 'equalto', vlandev_item) | map(attribute='vlan_interface') | list }}"
+  loop: "{{ vlan_devices }}"
+  loop_control:
+    loop_var: vlandev_item

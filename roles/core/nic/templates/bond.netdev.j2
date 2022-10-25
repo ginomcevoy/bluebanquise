@@ -1,0 +1,27 @@
+#jinja2: lstrip_blocks: True
+#### BlueBanquise file ####
+## {{ansible_managed}}
+
+[NetDev]
+Name={{ item.conn_name | default(item.interface) | string }}
+Kind=bond
+
+[Bond]
+{% if item.mode is defined %}
+Mode={{ item.mode }}
+{% endif %}
+{% if item.miimon is defined %}
+MIIMonitorSec={{ item.miimon }}
+{% endif %}
+{% if item.updelay is defined %}
+UpDelaySec={{ item.updelay }}
+{% endif %}
+{% if item.downdelay is defined %}
+DownDelaySec={{ item.downdelay }}
+{% endif %}
+{% if item.arp_interval is defined %}
+ARPIntervalSec={{ item.arp_interval }}
+{% endif %}
+{% if item.arp_ip_target is defined %}
+ARPIPTargets={{ item.arp_ip_target }}
+{% endif %}

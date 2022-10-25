@@ -7,8 +7,11 @@ Description
 This role configure network interfaces to provide desired ip, prefix, gateway, etc.
 The role also cover routes definitions on interfaces.
 
-This role provides all features availables in the main nmcli module.
+For RedHat and Suse, this role provides all features availables in the main nmcli module.
 Please refer to `nmcli module documentation <https://docs.ansible.com/ansible/latest/collections/community/general/nmcli_module.html>`_ .
+
+For Ubuntu, this role provides some support for the systemd-networkd service.
+Please refer to `systemd-networkd documentation <https://www.freedesktop.org/software/systemd/man/systemd-networkd.html>`_ .
 
 .. warning:
   This role needs **latest** (2.2.0) nmcli.py module.
@@ -185,6 +188,7 @@ To achieve that, few variables are at disposal:
 Changelog
 ^^^^^^^^^
 
+* 1.6.2: Improve networkd support for Ubuntu: mtu, bond, vlan. Giacomo Mc Evoy <gino.mcevoy@gmail.com>
 * 1.6.1: Add missing dns entry. Benoit Leveugle <benoit.leveugle@gmail.com>
 * 1.6.0: Add OpenSuSE 12 and 15 support. Neil Munday <neil@mundayweb.com>
 * 1.5.3: Improve Ubuntu compatibility. Benoit Leveugle <benoit.leveugle@gmail.com>

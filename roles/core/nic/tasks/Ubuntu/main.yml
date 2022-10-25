@@ -33,5 +33,26 @@
     - template
     - identify
 
+- name: template █ Render networkd netdevs configuration
+  ansible.builtin.template:
+    src: "{{ item.type }}.netdev.j2"
+    dest: "/etc/systemd/network/{{ item.conn_name | default(item.interface) | string }}.netdev"
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ network_interfaces }}"
+  when: item.type is defined and item.type in ["bond", "vlan"]
+  notify:
+    - command █ networkctl reload
+  tags:
+    - template
+    - identify
+
+- name: include_tasks ░ Use dedicated task for VLANs
+  ansible.builtin.include_tasks: vlan.yml
+  when: "'vlan' in (network_interfaces | map(attribute='type') | reject('undefined') | list)"
+  tags:
+    - internal
+
 - name: meta █ Run handlers
   ansible.builtin.meta: flush_handlers

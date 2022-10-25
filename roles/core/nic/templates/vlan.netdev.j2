@@ -1,0 +1,10 @@
+#jinja2: lstrip_blocks: True
+#### BlueBanquise file ####
+## {{ansible_managed}}
+
+[NetDev]
+Name={{ item.conn_name | default(item.interface) | string }}
+Kind=vlan
+
+[VLAN]
+Id={{ item.vlanid }}
